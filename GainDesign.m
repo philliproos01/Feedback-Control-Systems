@@ -2,23 +2,19 @@ A = [2 1 0; 1 0 0; 3 0 1];
 B = [1; 0; 0]; 
 C = [0 0 1];
 D = 0;
-xinit = [1 ; 0; 0]
+G = ss(A,B,C,D, 0.1);
+x0 = [2 ; 0; -3];  % initial state
 
-sD = ss(A, B, C, D);
-%poles = [0, 0, 0]
-%poles = [0.5, 0.5 + 0.01i, 0.5 + 0.01i]
+%uncomment the poles you DONT want to use
+%initial(G,x0)
+%poles = [0, 0, 0];
+%poles = [0.5, (0.5+0.01i), (0.5+0.01i)]
 poles = [0, 0.9, -0.9];
 
-k = acker(A, B, poles);
-%change the stuff below here
-A1 = sD.A - (sD.B*k);
-B1 = sD.B;
-C1 = sD.C;
-D1 = sD.D;
-sysn = ss(A1, B1, C1, D1);
-[wn,zeta,poles] = damp(sysn);
-n = 0:0.5:10;
-x = initial(sysn, xinit, n);
+K = acker(A, B, poles);
+N = (A-B*K)
 
-stem(n,x,'LineWidth',2)
-%figure()
+t = 0:0.1:20;
+sys = ss(N,B,C,D, 0.1);
+initial(sys,x0,t)
+
